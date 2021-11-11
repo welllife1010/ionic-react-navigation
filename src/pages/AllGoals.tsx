@@ -1,14 +1,14 @@
 import React from 'react';
-import { IonHeader, IonContent, IonToolbar, IonTitle, IonPage, IonButton, IonMenuButton } from '@ionic/react';
+import { IonHeader, IonContent, IonToolbar, IonTitle, IonPage, IonButtons, IonMenuButton } from '@ionic/react';
 
 const AllGoals: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonButton slot="start">
+                    <IonButtons slot="start">
                         <IonMenuButton />
-                    </IonButton>
+                    </IonButtons>
                     <IonTitle>
                         All Goals
                     </IonTitle>
