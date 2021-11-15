@@ -24,7 +24,7 @@ const CourseTabs: React.FC = () => {
                     </Route>
                 </Switch>
             </IonRouterOutlet>
-            <IonTabBar slot="bottom">
+            <IonTabBar slot="bottom" color="primary">
                 <IonTabButton tab="all-goals" href="/courses/all-goals">
                     <IonIcon icon={list} />
                     <IonLabel>All Goals</IonLabel>

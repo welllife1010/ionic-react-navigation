@@ -72,36 +72,36 @@ const CourseGoals: React.FC = () => {
                     <IonButton>Save</IonButton>
                 </IonContent>
             </IonModal>
-            <IonToast isOpen={!!toastMessage} 
+            <IonToast isOpen={!!toastMessage}
                 message={toastMessage}
-                duration={2000} 
+                duration={2000}
                 onDidDismiss={() => {
                     setToastMessage('');
-                }} 
+                }}
             />
-            <IonAlert isOpen={startedDeleting} 
-            header="Are you sure?" 
-            message="Do you want to delete the goal? This cannot be undone." 
-            buttons={[
-                {
-                    text: 'No', 
-                    role: 'cancel', 
-                    handler: () => {
-                        setStartedDeleting(false);
+            <IonAlert isOpen={startedDeleting}
+                header="Are you sure?"
+                message="Do you want to delete the goal? This cannot be undone."
+                buttons={[
+                    {
+                        text: 'No',
+                        role: 'cancel',
+                        handler: () => {
+                            setStartedDeleting(false);
+                        }
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => {
+                            deleteGoalHandler();
+                        }
                     }
-                },
-                {
-                    text: 'Yes',
-                    handler: () => {
-                        deleteGoalHandler();
-                    }
-                }
-            ]}></IonAlert>
+                ]}></IonAlert>
             <IonPage>
                 <IonHeader>
                     <IonToolbar>
                         <IonButtons slot="start">
-                            <IonBackButton defaultHref="/courses/list" />
+                            <IonBackButton defaultHref="/courses/list" color="light-contrast" />
                         </IonButtons>
                         <IonTitle>
                             {selectedCourse ? selectedCourse.title : "No course found!"}
