@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
     IonHeader,
     IonContent,
@@ -9,40 +9,46 @@ import {
     IonGrid,
     IonRow,
     IonCol,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
+    IonButtons,
+    IonIcon,
+    isPlatform,
+    IonFab,
+    IonFabButton,
 } from "@ionic/react";
 // import { useHistory } from 'react-router-dom';
+import { addOutline } from "ionicons/icons";
+
+import AddCourseModal from "../components/AddCourseModal";
+import CourseItem from "../components/CourseItem";
+import CoursesContext from "../data/courses-context";
 
 export const COURSE_DATA = [
     {
-        id: "c1", 
-        title: "Ionic + React - The Practical Guide", 
-        enrolled: new Date('11/07/2021'), 
+        id: "c1",
+        title: "Ionic + React - The Practical Guide",
+        enrolled: new Date("11/07/2021"),
         goals: [
-            { id: 'c1g1', text: 'Finish the course!'},
-            { id: 'c1g2', text: 'Learn a lot!'},
-        ]
+            { id: "c1g1", text: "Finish the course!" },
+            { id: "c1g2", text: "Learn a lot!" },
+        ],
     },
-    {   id: "c2", 
-        title: "React.js - The Complete Guide", 
-        enrolled: new Date('08/05/2020'),
+    {
+        id: "c2",
+        title: "React.js - The Complete Guide",
+        enrolled: new Date("08/05/2020"),
         goals: [
-            { id: 'c2g1', text: 'Finish the course!' },
-            { id: 'c2g2', text: 'Learn a lot!' },
-        ]
+            { id: "c2g1", text: "Finish the course!" },
+            { id: "c2g2", text: "Learn a lot!" },
+        ],
     },
-    { 
-        id: "c3", 
-        title: "JavaScript - The Complete Guide", 
-        enrolled: new Date('03/22/2019'),
+    {
+        id: "c3",
+        title: "JavaScript - The Complete Guide",
+        enrolled: new Date("03/22/2019"),
         goals: [
-            { id: 'c3g1', text: 'Finish the course!' },
-            { id: 'c3g2', text: 'Learn a lot!' },
-        ]
+            { id: "c3g1", text: "Finish the course!" },
+            { id: "c3g2", text: "Learn a lot!" },
+        ],
     },
 ];
 
@@ -52,46 +58,68 @@ const Courses: React.FC = () => {
     //     history.push('/course-goals');
     // }
 
+    const coursesCtx = useContext(CoursesContext);
+
+    const [isAdding, setIsAdding] = useState(false);
+
+    const startAddCourseHandler = () => {
+        setIsAdding(true);
+    };
+
+    const cancelAddCourseHandler = () => {
+        setIsAdding(false);
+    };
+
+    const courseAddHandler = (title: string, date: Date) => {
+        coursesCtx.addCourse(title, date);
+        setIsAdding(false);
+    };
+
     return (
-        <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Courses</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent>
-                {/* <h2>This works - courses page!</h2>
-                <div>
-                    <IonButton routerLink="/course-goals">To Course Goals</IonButton>
-                    <IonButton onClick={changePageHandler}>To Course Goals</IonButton>
-                </div> */}
-                <IonGrid>
-                    {COURSE_DATA.map((course) => (
-                        <IonRow key={course.id}>
-                            <IonCol size-md="4" offset-md="4">
-                                <IonCard>
-                                    <IonCardHeader>
-                                        <IonCardTitle>{course.title}</IonCardTitle>
-                                        <IonCardSubtitle>Enrolled on {course.enrolled.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</IonCardSubtitle>
-                                    </IonCardHeader>
-                                    <IonCardContent>
-                                        <div className="ion-text-right">
-                                            <IonButton
-                                                fill="clear"
-                                                color="secondary"
-                                                routerLink={`/courses/${course.id}`}
-                                            >
-                                                View Course Goals
-                                            </IonButton>
-                                        </div>
-                                    </IonCardContent>
-                                </IonCard>
-                            </IonCol>
-                        </IonRow>
-                    ))}
-                </IonGrid>
-            </IonContent>
-        </IonPage>
+        <React.Fragment>
+            <AddCourseModal show={isAdding} onCancel={cancelAddCourseHandler} onSave={courseAddHandler}/>
+            <IonPage>
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Courses</IonTitle>
+                        {!isPlatform("android") && (
+                            <IonButtons slot="end">
+                                <IonButton onClick={startAddCourseHandler}>
+                                    <IonIcon slot="icon-only" icon={addOutline} />
+                                </IonButton>
+                            </IonButtons>
+                        )}
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent>
+                    {/* <h2>This works - courses page!</h2>
+                        <div>
+                            <IonButton routerLink="/course-goals">To Course Goals</IonButton>
+                            <IonButton onClick={changePageHandler}>To Course Goals</IonButton>
+                        </div> */}
+                    <IonGrid>
+                        {coursesCtx.courses.map((course) => (
+                            <IonRow key={course.id}>
+                                <IonCol size-md="4" offset-md="4">
+                                    <CourseItem
+                                        title={course.title}
+                                        enrolmentDate={course.enrolled}
+                                        id={course.id}
+                                    />
+                                </IonCol>
+                            </IonRow>
+                        ))}
+                    </IonGrid>
+                    {isPlatform("android") && (
+                        <IonFab horizontal="end" vertical="bottom" slot="fixed">
+                            <IonFabButton color="secondary" onClick={startAddCourseHandler}>
+                                <IonIcon icon={addOutline} />
+                            </IonFabButton>
+                        </IonFab>
+                    )}
+                </IonContent>
+            </IonPage>
+        </React.Fragment>
     );
 };
 
